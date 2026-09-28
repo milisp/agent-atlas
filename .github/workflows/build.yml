@@ -31,7 +31,7 @@ jobs:
       - name: Zip the app
         run: ditto -c -k --keepParent "dist/Agent Atlas.app" "dist/Agent-Atlas.zip"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: Agent-Atlas
           path: dist/Agent-Atlas.zip
