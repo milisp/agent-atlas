@@ -62,6 +62,8 @@ char *tb_refresh_graph(const char *year);
 
 // Per-model report (ModelReport).
 char *tb_model_report(const char *year);
+// Workspace/model token totals (WorkspaceReport) for the treemap.
+char *tb_workspace_report(const char *year, const char *clients);
 // Per-hour report (HourlyReport). `clients` = comma-joined canonical ids to
 // restrict to, or NULL/empty for all clients (filtered in the streaming scan).
 char *tb_hourly_report(const char *year, const char *clients);

@@ -35,6 +35,7 @@ mod kiro_integrations;
 mod macos_safe_storage;
 mod window_usage;
 mod model_report;
+mod workspace_report;
 mod opencode_integrations;
 mod usage_graph;
 mod usage_tail;
@@ -947,6 +948,25 @@ pub unsafe extern "C" fn tb_model_report(year: *const c_char) -> *mut c_char {
     guarded("tb_model_report", || {
         let context = LocalSourceContext::current();
         envelope(unsafe { year_from(year) }.and_then(|year| model_report::run(&context, &year)))
+    })
+}
+
+/// Workspace/model token totals for a treemap. NULL/empty year means all time.
+///
+/// # Safety
+///
+/// `year` and `clients` must be null or valid NUL-terminated UTF-8 strings.
+#[no_mangle]
+pub unsafe extern "C" fn tb_workspace_report(
+    year: *const c_char,
+    clients: *const c_char,
+) -> *mut c_char {
+    guarded("tb_workspace_report", || {
+        let context = LocalSourceContext::current();
+        envelope(unsafe { year_from(year) }.and_then(|year| {
+            let clients = unsafe { clients_from(clients) }?;
+            workspace_report::run(&context, &year, clients)
+        }))
     })
 }
 

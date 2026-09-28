@@ -751,6 +751,8 @@ struct PopoverView: View {
                         windowCurves: model.windowCurves,
                         agentUsage: model.agentUsage)
                 }
+            case .treemap:
+                WorkspaceTreemapView(year: model.year, clientIds: clientIds)
             case .quota:
                 VStack(spacing: 12) {
                     // On every tab: this lens is where the window history reads

@@ -254,6 +254,10 @@ public enum TBCore {
         try unwrap(withYear(year) { tb_model_report($0) })
     }
 
+    public static func workspaceReport(year: String? = nil, clients: [String]? = nil) throws -> WorkspaceReport {
+        try unwrap(withYearAndClients(year, clients) { tb_workspace_report($0, $1) })
+    }
+
     /// Per-hour report for `year` (nil = all time), restricted to `clients`
     /// (nil/empty = all clients). The core filters at the streaming scan, so a
     /// client slice yields accurate per-client totals for hours shared across

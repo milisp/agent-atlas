@@ -1,105 +1,28 @@
-<h1 align="center">Syrtis</h1>
+<h1 align="center">Agent Atlas</h1>
 
-<p align="center">
-  <strong>AI token usage &amp; quota monitor for the macOS menu bar — native Swift, Liquid Glass.</strong>
-</p>
+<p align="center"><strong>A native macOS map of where your AI coding tokens go.</strong></p>
 
-<p align="center"><b>English</b> · <a href="README.zh-TW.md">繁體中文</a> · <a href="README.zh-CN.md">简体中文</a></p>
+Agent Atlas turns local AI coding session data into a treemap grouped by workspace and model. Each rectangle's area represents token usage, so you can quickly see which projects and models account for the most activity. The app reads local usage data and renders it on your Mac.
 
-<p align="center">
-  <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Nanako0129/syrtis/badges/install-count.json&style=flat-square" alt="Total installs">
-  <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" alt="MIT Licence">
-  <img src="https://img.shields.io/badge/macOS-14%2B-black?style=flat-square&logo=apple" alt="macOS 14+">
-  <img src="https://img.shields.io/badge/Apple%20Silicon-arm64-success?style=flat-square" alt="Apple Silicon">
-  <img src="https://img.shields.io/badge/Swift-6.4%2B-F05138?style=flat-square&logo=swift&logoColor=white" alt="Swift 6.4+">
-  <img src="https://img.shields.io/badge/Liquid%20Glass-macOS%2026-7c6cff?style=flat-square" alt="Liquid Glass">
-</p>
+The first build focuses on the project map, with source filters for all data, Claude Code, and Codex. It is an early, local-first utility; provider coverage and presentation will evolve as the app is developed.
 
-<br>
+## Build
 
-**Syrtis** is a free, open-source macOS menu-bar app that reads the session logs your AI coding tools already write to disk and displays your tokens, costs, and subscription quotas. It supports 25+ tools—including Claude Code, Codex, Cursor, OpenCode, Gemini CLI, Copilot, Kiro, and Antigravity—completely on-device, with no Dock icon, no telemetry, no user account, and no cloud sync.
-
-Until version 2.0, the app was called TokenBar on macOS; upgrading preserves your settings, history, and login item unchanged. A companion Windows tray version, also named [Syrtis](https://github.com/Nanako0129/Syrtis-Windows), is built on the same Rust core.
-
-<p align="center">
-  <img src="docs/screenshots/og-card.png" alt="Syrtis — where your tokens settle" width="800">
-</p>
-
-The menu-bar title displays today's token count, total cost, live tokens per minute, or remaining subscription quota—shown as signal bars, a progress ring, or a popsicle that melts as the window drains. The menu-bar cat spins faster the more tokens you burn, tracing back to [RunCat](https://kyome.io/runcat/) by Takuto Nakamura.
-
----
-
-## The dashboard
-
-Clicking the icon opens a Liquid Glass panel (a popover before macOS 27). A row of **app tabs** filters which agents to inspect, while a **view switch** breaks down that usage across eight lenses—Overview, Quota, Models, Monthly, Daily, Hourly, Stats, and Agents—alongside the full year of activity rendered as an orbitable 3D graph.
-
-<p align="center">
-  <img src="docs/screenshots/graph-3d.png" alt="Interactive 3D contribution graph" width="400">
-</p>
-
-<table>
-  <tr>
-    <td align="center" width="50%"><img src="docs/screenshots/overview.png" alt="Overview" width="300"><br><sub><b>Overview</b> — the tightest limit, today, and the year at a glance</sub></td>
-    <td align="center" width="50%"><img src="docs/screenshots/quota.png" alt="Quota view" width="300"><br><sub><b>Quota</b> — past windows and when the allowance goes</sub></td>
-  </tr>
-  <tr>
-    <td align="center" width="50%"><img src="docs/screenshots/models.png" alt="Models view" width="300"><br><sub><b>Models</b> — every model ranked by cost</sub></td>
-    <td align="center" width="50%"><img src="docs/screenshots/monthly.png" alt="Monthly view" width="300"><br><sub><b>Monthly</b> — active months, with month drill-down</sub></td>
-  </tr>
-  <tr>
-    <td align="center" width="50%"><img src="docs/screenshots/daily.png" alt="Daily view" width="300"><br><sub><b>Daily</b> — active days, with day drill-down</sub></td>
-    <td align="center" width="50%"><img src="docs/screenshots/hourly.png" alt="Hourly view" width="300"><br><sub><b>Hourly</b> — when in the day you burn tokens</sub></td>
-  </tr>
-  <tr>
-    <td align="center" width="50%"><img src="docs/screenshots/stats.png" alt="Stats view" width="300"><br><sub><b>Stats</b> — headline summary &amp; streaks</sub></td>
-    <td align="center" width="50%"><img src="docs/screenshots/agents.png" alt="Agents view" width="300"><br><sub><b>Agents</b> — sub-agents ranked by cost</sub></td>
-  </tr>
-  <tr>
-    <td align="center" colspan="2"><img src="docs/screenshots/settings.png" alt="Settings" width="300"><br><sub><b>Settings</b> — menu-bar title, icon &amp; quota source</sub></td>
-  </tr>
-</table>
-
-The dashboard also provides **OAuth quota cards** with pace projections, a live session trace, activity streaks, and keyboard control (⌘1–9 tabs, ⌘G chart toggle, ⌘, settings). If a background refresh fails, Syrtis never blanks a reading: the last known value stays until a fresh one lands.
-
-## Install
+Requirements: an Apple Silicon Mac, macOS 14 or later, Xcode 27, and the Rust toolchain.
 
 ```sh
-brew install --cask nanako0129/tap/syrtis
+./scripts/bundle-agent-atlas.sh
+open "dist/Agent Atlas.app"
 ```
 
-In-app updates arrive via Sparkle; betas ride an opt-in channel (Settings → "Receive beta updates"). The app is ad-hoc signed (not notarized)—the cask clears the quarantine attribute on install, as disclosed. Requires an Apple Silicon Mac on macOS 14+ (Liquid Glass needs macOS 26 and the glass panel macOS 27; earlier systems get a vibrancy fallback). Building from source needs Xcode 27. Still on macOS 11–13? The final Tauri build stays as [`tokenbar@legacy`](https://github.com/Nanako0129/TokenBar-Tauri).
+The bundle is ad-hoc signed for local use. It is not notarized.
 
-## How it works
+## Data and privacy
 
-Rust owns the data: the public [tokscale-core](https://github.com/Nanako0129/tokscale-core) shared engine, pinned as a Git submodule, handles session parsing, aggregation, and pricing; the app-owned `crates/tb_core_ffi` adds quota fetching and exposes the C ABI. Swift owns the rest: SwiftUI views, the `NSStatusItem` shell, Sparkle updates.
+Agent Atlas builds on local session data supported by its upstream usage engine. The project map groups token counts by workspace and model; it does not need an Agent Atlas account or a hosted service.
 
-```sh
-make                        # cargo build --release, then swift build
-make run                    # build + launch Syrtis
-swift run Syrtis --smoke  # run the FFI smoke test
-```
+## Upstream and license
 
-The [project knowledge base](docs/knowledge/README.md) is the canonical guide to the Rust-to-Swift architecture, verification gates, shared-engine boundary, release chain, and maintenance state.
+Agent Atlas is an independent derivative project based on [Syrtis](https://github.com/Nanako0129/syrtis), with the workspace treemap and standalone app mode developed here. Syrtis is licensed under MIT. This repository retains upstream copyright and license notices; see [LICENSE](LICENSE) and the source credits for the other components used by the project.
 
-> Run `swift build` from the repo root — the linker's `-L target/release` path
-> in `Package.swift` is relative.
-
-## Support Syrtis
-
-Syrtis is local-first and needs no Syrtis account, but maintaining trustworthy numbers across 25+ AI coding agents is a wide compatibility job. Parser changes cross Rust, FFI, Swift, and the Windows sibling; live quota cards require real OAuth or subscription accounts and provider APIs; releases cover native macOS behavior, Sparkle signing and appcasts, Homebrew, and legacy migration metadata.
-
-Sponsorship helps cover test accounts, CI and release infrastructure, and the maintainer time required to keep readings accurate as upstream formats change. If Syrtis helps you understand where your AI budget goes, you can support its continued development on Patreon.
-
-[![Support Syrtis on Patreon](https://img.shields.io/badge/Support_on_Patreon-FF424D?style=for-the-badge&logo=patreon&logoColor=white)](https://www.patreon.com/cw/Nanako0129/membership)
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, change-specific guardrails, verification, and pull-request requirements.
-
-## Credits
-
-Syrtis is built on **[tokscale](https://github.com/junhoyeo/tokscale)** by Junho Yeo. Syrtis's shared [`tokscale-core`](https://github.com/Nanako0129/tokscale-core) engine derives from that core and handles session parsing, dedup, and pricing across 25+ agents. The tokscale interactive TUI is also the blueprint for the whole dashboard: the Overview, Models, Monthly, Daily, Hourly, Stats and Agents lenses and their `In · Out · CR · CW` column breakdown are modeled on it.
-
-The product line began as a fork of [tokcat](https://github.com/handlecusion/tokcat) by handlecusion—the original Tauri menu-bar monitor (itself built on tokscale). This native app is a ground-up Swift rewrite that carries no tokcat code, but the menu-bar form and the spinning-cat signature are theirs; the cat traces back to [RunCat](https://kyome.io/runcat/) by Takuto Nakamura. The quota-pace cards reference [CodexBar](https://github.com/steipete/CodexBar) by Peter Steinberger.
-
-All MIT. Licensed under [MIT](LICENSE).
+Agent Atlas is not affiliated with or endorsed by the Syrtis maintainers. The name and branding of this app are independent.

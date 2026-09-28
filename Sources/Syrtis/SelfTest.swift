@@ -8323,13 +8323,22 @@ enum SelfTest {
 
         // Tab order (plan 2026-07-16): Monthly leads Daily in the tab row.
         expect(AppView.allCases.map(\.rawValue) ==
-            ["overview", "quota", "models", "monthly", "daily", "hourly", "stats", "agents"],
+            ["overview", "treemap", "quota", "models", "monthly", "daily", "hourly", "stats", "agents"],
             "tab row leads with Monthly, ahead of Daily, and Quota follows Overview")
+
+        let treemapFrames = TokenTreemapLayout.frames(
+            weights: [6, 3, 1], in: CGRect(x: 0, y: 0, width: 100, height: 100))
+        let treemapAreas = treemapFrames.map { $0.width * $0.height }
+        expect(treemapAreas.count == 3
+            && abs(treemapAreas[0] - 6000) < 0.1
+            && abs(treemapAreas[1] - 3000) < 0.1
+            && abs(treemapAreas[2] - 1000) < 0.1,
+            "treemap areas remain proportional to token totals")
 
         // View-tabs visibility (plan 2026-07-16, generalized): any of the
         // five toggleable lenses can be hidden independently; Overview and
         // Models are fixed anchors, never in AppView.toggleable.
-        expect(AppView.toggleable == [.quota, .monthly, .daily, .hourly, .stats, .agents],
+        expect(AppView.toggleable == [.treemap, .quota, .monthly, .daily, .hourly, .stats, .agents],
             "toggleable lenses are fixed order, excluding Overview and Models")
         expect(AppView.visible(hiddenRaw: "") == AppView.allCases,
             "no hidden lenses shows every lens")

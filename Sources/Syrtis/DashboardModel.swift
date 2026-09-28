@@ -11,7 +11,7 @@ enum AppView: String, CaseIterable {
     /// subscription's window and its past windows live. Position is product
     /// order, not an implementation detail — the tab row renders declaration
     /// order, and `SelfTest` pins it.
-    case overview, quota, models, monthly, daily, hourly, stats, agents
+    case overview, treemap, quota, models, monthly, daily, hourly, stats, agents
 
     /// Title-cased id, then looked up: the English label doubles as the
     /// translation key, while `rawValue` stays the persisted id.

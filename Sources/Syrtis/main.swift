@@ -1,4 +1,5 @@
 import AppKit
+import SwiftUI
 
 // Entry point. `--smoke` keeps the Phase 1 CLI bridge check available for CI,
 // `--selftest` runs the TokenBarCore logic checks; anything else boots the
@@ -33,6 +34,35 @@ if CommandLine.arguments.contains("--selftest") {
             Data("warning: re-run with -AppleLanguages \"(en)\" (or `make selftest`) — string assertions expect English\n".utf8))
     }
     SelfTest.run()
+}
+
+// Open the token treemap as a regular, resizable Mac window instead of the
+// menu-bar shell. It uses the same Rust report and SwiftUI view as the lens.
+if CommandLine.arguments.contains("--treemap")
+    || (Bundle.main.object(forInfoDictionaryKey: "AgentAtlasStandalone") as? Bool == true) {
+    final class WindowLifecycle: NSObject, NSApplicationDelegate {
+        func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
+    }
+    let app = NSApplication.shared
+    let lifecycle = WindowLifecycle()
+    app.delegate = lifecycle
+    app.setActivationPolicy(.regular)
+    let window = NSWindow(
+        contentRect: NSRect(x: 0, y: 0, width: 1120, height: 750),
+        styleMask: [.titled, .closable, .miniaturizable, .resizable],
+        backing: .buffered, defer: false)
+    window.title = "Agent Atlas"
+    window.minSize = NSSize(width: 700, height: 600)
+    window.contentView = NSHostingView(rootView:
+        WorkspaceTreemapView(year: nil, clientIds: nil, expanded: true)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color(red: 0.08, green: 0.09, blue: 0.11))
+            .preferredColorScheme(.dark))
+    window.center()
+    window.makeKeyAndOrderFront(nil)
+    app.activate(ignoringOtherApps: true)
+    app.run()
+    exit(0)
 }
 
 if DemoData.ignoresLocalVisibility {
