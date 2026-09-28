@@ -82,7 +82,8 @@ struct WorkspaceTreemapView: View {
                     .background(Color.black.opacity(0.18))
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
-                .frame(height: expanded ? 590 : 390)
+                // The window grows with its frame; the popover keeps a fixed height.
+                .frame(minHeight: expanded ? 360 : 390, maxHeight: expanded ? .infinity : 390)
                 if let selected = report.workspaces.first(where: { $0.key == selectedKey }) {
                     Text("\(displayName(selected)) · \(Format.compactTokens(selected.tokens)) · \(selected.models.count) models")
                         .font(.caption)
@@ -104,6 +105,7 @@ struct WorkspaceTreemapView: View {
             }
         }
         .padding(expanded ? 20 : 12)
+        .frame(maxHeight: expanded ? .infinity : nil, alignment: .top)
         .glassCard()
         .task(id: "\(year ?? "all")|\(activeClientIds?.joined(separator: ",") ?? "all")") {
             report = nil

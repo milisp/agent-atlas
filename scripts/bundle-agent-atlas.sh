@@ -3,10 +3,14 @@
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
-make bundle
+# Stage the intermediate Syrtis.app outside dist/ so only Agent Atlas lands there.
+staging=".build/agent-atlas-staging"
+OUT_DIR="$staging" make bundle
 
 destination="dist/Agent Atlas.app"
-ditto "dist/Syrtis.app" "$destination"
+rm -rf "$destination"
+mkdir -p dist
+ditto "$staging/Syrtis.app" "$destination"
 icon_info="/private/tmp/agent-atlas-icon-info-$$.plist"
 xcrun actool \
   --compile "$destination/Contents/Resources" \
