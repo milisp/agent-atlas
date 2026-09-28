@@ -2,6 +2,8 @@
 
 <p align="center"><strong>A native macOS map of where your AI coding tokens go.</strong></p>
 
+<p align="center"><img src="assets/agent-atlas-logo.png" alt="Agent Atlas app icon" width="220"></p>
+
 Agent Atlas turns local AI coding session data into a treemap grouped by workspace and model. Each rectangle's area represents token usage, so you can quickly see which projects and models account for the most activity. The app reads local usage data and renders it on your Mac.
 
 The first build focuses on the project map, with source filters for all data, Claude Code, and Codex. It is an early, local-first utility; provider coverage and presentation will evolve as the app is developed.

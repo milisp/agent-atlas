@@ -2,6 +2,8 @@
 
 <p align="center"><strong>用原生 macOS 图表，查看 AI 编程 token 都花在了哪里。</strong></p>
 
+<p align="center"><img src="assets/agent-atlas-logo.png" alt="Agent Atlas 应用图标" width="220"></p>
+
 Agent Atlas 将本机 AI 编程会话数据整理成按工作区和模型分组的矩形树图。每个矩形的面积代表 token 用量，帮助你快速看出哪些项目和模型占用了更多用量。数据在 Mac 本机读取和呈现。
 
 首个版本聚焦于项目用量图，并提供全部数据、Claude Code 和 Codex 三种来源筛选。这是一款仍在早期开发的本地优先工具，支持的数据来源和呈现方式会继续完善。

@@ -40,10 +40,6 @@ cp -R .build/release/Syrtis_Syrtis.bundle "$APP/Contents/Resources/"
 # stages the same .lproj directories from the SwiftPM resource bundle before
 # SwiftUI creates any views.
 cp -R Sources/Syrtis/Resources/Localizations/*.lproj "$APP/Contents/Resources/"
-# Brand icon, shared with the Tauri app.
-if [ -f assets/icon.icns ]; then
-  cp assets/icon.icns "$APP/Contents/Resources/icon.icns"
-fi
 # Sparkle framework, compiled here rather than taken from the SPM binary
 # artifact — see scripts/build-sparkle.sh for why the official prebuilt one
 # cannot rename the installed app. Not conditional: an app assembled without an
