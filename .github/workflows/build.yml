@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  app:
+    # GitHub-hosted Apple Silicon image with Xcode 27.
+    runs-on: xcode-27
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Assemble Agent Atlas.app
+        run: scripts/bundle-agent-atlas.sh
+
+      - name: Zip the app
+        run: ditto -c -k --keepParent "dist/Agent Atlas.app" "dist/Agent-Atlas.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Agent-Atlas
+          path: dist/Agent-Atlas.zip
+          retention-days: 14
